@@ -33,12 +33,13 @@ const wsServer = SocketIO(httpServer); //socket io로 server 생성
 //합치므로써 같은 port에서 http와 ws 의 request를 모두 처리할 수 있다
 
 wsServer.on("connection", (socket) => {
-    socket.on("enter_room", (msg, done) => {
-        console.log(msg);
-        setTimeout(()=>{
-            done();
-        }, 10000);
-    }); //front-end의 이벤트를 back-end로 불러오기, 
+    socket.onAny((event)=> {
+        console.log(`Socket Event:${event}`);
+    });
+    socket.on("enter_room", (roomName, done) => {
+        socket.join(roomName);
+        done(); // room 생성 
+    }); 
     //front-end의 on과 back-end의 emit은 같은 이름이어야 한다
 });
 
